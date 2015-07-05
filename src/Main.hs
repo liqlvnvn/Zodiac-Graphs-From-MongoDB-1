@@ -19,9 +19,12 @@ main = do
     let d = parse3 d'
     --print c
     let s =  sortOn extr3 (sortOn extr3' c)
+    gr3 values
+    --print t 
+  --  print $ gr3 $ prepareData s
     --t <- graph3 "3" c
     --print t
-    gr3 $ prepareData s
+  --  gr3 $ prepareData s
     -- print $ sortOn extr1 b
     -- print $ sortDoc a
     -- print a

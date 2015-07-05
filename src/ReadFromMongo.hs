@@ -10,28 +10,28 @@ import Data.Bson
 readFromMongo1 :: IO [Document]
 readFromMongo1 = do
     pipe <- connect (host "127.0.0.1")
-    a <- access pipe master "Actors" run1
+    a <- access pipe master "actors" run1
     close pipe
     return a
 
 readFromMongo2 :: IO [Document]
 readFromMongo2 = do
     pipe <- connect (host "127.0.0.1")
-    b <- access pipe master "Actors" run2
+    b <- access pipe master "actors" run2
     close pipe
     return b
 
 readFromMongo3 :: IO [Document]
 readFromMongo3 = do
     pipe <- connect (host "127.0.0.1")
-    c <- access pipe master "Actors" run3
+    c <- access pipe master "actors" run3
     close pipe
     return c
 
 readFromMongo4 :: IO [Document]
 readFromMongo4 = do
     pipe <- connect (host "127.0.0.1")
-    d <- access pipe master "Actors" run4
+    d <- access pipe master "actors" run4
     close pipe
     return d
 

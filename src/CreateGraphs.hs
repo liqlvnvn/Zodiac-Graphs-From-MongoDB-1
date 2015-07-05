@@ -59,27 +59,28 @@ createGraph3 title d labels =  plot X11 $ Data2D [Title title]
 -}
 
 titles = ["Cash","Equity"]
-{-}
+
 values :: [ (String,[Double]) ]
 values =
-    [ ("Jun", [20,45])
-    , ("Jul", [45,30])
-    , ("Aug", [30,20])
-    , ("Sep", [10,40])
-    , ("Oct", [20,50])
+    [ ("Jun", [20,40,30])
+    , ("Jul", [45,30,30])
+    , ("Aug", [30,20,30])
+    , ("Sep", [10,40,30])
+    , ("Oct", [20,50,30])
     ]
--}
+
+{-}
 prepareData :: [(String, String, Int)] -> [(String, [Double])]
-prepareData dal = cc $ map bb (aa dal)
+prepareData dal = map cc (map bb (aa dal))
     where aa :: [(String, String, Int)] -> [[(String, String, Int)]]
           aa d = groupBy comp d
           bb :: [(String, String, Int)] -> [(String,Int)]
           bb d = map (\ x -> sel1 x ++ "/" ++ sel2 x) d
-          cc :: [(String,Int)] -> (String,[Double])
+          cc :: (String,Int) -> (String,[Double])
           cc d = (concat $ fst $ unzip d, map intToDouble (snd $ unzip d))
           comp :: (String, String, Int) -> (String, String, Int) -> Bool
           comp a b = fst a == fst b
-
+-}
 gr3 values = toFile def "example11_big.png" $ do
     layout_title .= "Sample Bars"
     layout_title_style . font_size .= 10

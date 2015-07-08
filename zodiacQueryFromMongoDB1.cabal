@@ -63,11 +63,9 @@ executable zodiacQueryFromMongoDB1
   build-depends:       base,
                        mongoDB,
                        hs-gchart,
-                       bson,
                        extra,
                        tuple,
-                       Chart,
-                       Chart-cairo
+                       bson
 
   -- Directories containing source files.
   hs-source-dirs:      src,
@@ -75,4 +73,4 @@ executable zodiacQueryFromMongoDB1
 
   -- Base language which the package is written in.
   default-language:    Haskell2010
-  ghc-options:         -Wall -fno-warn-name-shadowing
+  ghc-options:         -Wall  -fno-warn-name-shadowing

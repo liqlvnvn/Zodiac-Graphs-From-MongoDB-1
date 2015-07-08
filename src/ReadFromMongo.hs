@@ -1,79 +1,58 @@
-{-# LANGUAGE OverloadedStrings, ExtendedDefaultRules #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ExtendedDefaultRules #-}
+
 module ReadFromMongo where
 
-import Parsing
-import Parsing.ParsingFromMongo
-
 import Database.MongoDB
-import Data.Bson
 
-readFromMongo1 :: IO [Document]
-readFromMongo1 = do
-    pipe <- connect (host "127.0.0.1")
-    a <- access pipe master "actors" run1
-    close pipe
-    return a
+db :: Database
+db = "Actors"
 
-readFromMongo2 :: IO [Document]
-readFromMongo2 = do
-    pipe <- connect (host "127.0.0.1")
-    b <- access pipe master "actors" run2
-    close pipe
-    return b
+collection :: Collection
+collection = "actors"
 
-readFromMongo3 :: IO [Document]
-readFromMongo3 = do
+readFromMongo :: Database -> Action IO [Document] -> IO [Document]
+readFromMongo db query = do
     pipe <- connect (host "127.0.0.1")
-    c <- access pipe master "actors" run3
-    close pipe
-    return c
-
-readFromMongo4 :: IO [Document]
-readFromMongo4 = do
-    pipe <- connect (host "127.0.0.1")
-    d <- access pipe master "actors" run4
+    d <- access pipe master db query
     close pipe
     return d
 
--- | db.actors.aggregate([{$group: {_id: "$zodiac",count: {$sum: 1}}}])
-run1 :: Action IO [Document]
-run1 = aggregate "actors" query1
+-- | db.Actors.aggregate([{$group: {_id: "$zodiac",count: {$sum: 1}}}])
+query1 :: Collection -> Action IO [Document]
+query1 col = aggregate col q
+    where
+        q = [[ "$group" =: [ "_id" =: String "$zodiac"
+                           , "count" =: ["$sum" =: Int32 1]]]]
 
-query1 :: [Document]
-query1 = [[ "$group" =: [ "_id" =: "$zodiac"
-                        , "count" =: ["$sum" =:  1]]]]
+-- | db.Actors.aggregate([{$group: {_id: "$inf_zodiac",count: {$sum: 1}}}])
+query2 :: Collection -> Action IO [Document]
+query2 col = aggregate col q
+    where
+        q = [["$group" =: [ "_id" =: String "$inf_zodiac"
+                          , "count" =: ["$sum" =:  Int32 1]]]]
 
--- | db.actors.aggregate([{$group: {_id: "$inf_zodiac",count: {$sum: 1}}}])
-run2 :: Action IO [Document]
-run2 = aggregate "actors" query2
-
-query2 :: [Document]
-query2 = [["$group" =: [ "_id" =: "$inf_zodiac"
-                       , "count" =: ["$sum" =:  1]]]]
-
-run3 :: Action IO [Document]
-run3 = aggregate "actors" query3
-
-query3 :: [Document]
-query3 = [["$group" =: [ "_id" =: [ "zodiac" =: "$zodiac"
-                                  , "inf_zodiac" =: "$inf_zodiac"]
-                       , "count" =: ["$sum" =:  1]]]]
+query3 :: Collection -> Action IO [Document]
+query3 col = aggregate col q
+    where
+        q = [["$group" =: [ "_id" =: [ "zodiac" =: String "$zodiac"
+                                     , "inf_zodiac" =: String "$inf_zodiac"]
+                          , "count" =: ["$sum" =:  Int32 1]]]]
 
 -- | distribution of birthdays
-run4 :: Action IO [Document]
-run4 = aggregate "actors" query4
-
-query4 :: [Document]
-query4 = [["$group" =: [ "_id" =: [ "day" =: "$birthday.day"
-                                  , "month" =: "$birthday.month"]
-                       , "count" =: ["$sum" =:  1]]]]
+query4 :: Collection -> Action IO [Document]
+query4 col = aggregate col q
+    where
+        q = [["$group" =: [ "_id" =: [ "day" =: String "$birthday.day"
+                                     , "month" =: String "$birthday.month"]
+                          , "count" =: ["$sum" =:  Int32 1]]]]
 
 -- | number of days with b-d's
-run5 :: Action IO [Document]
-run5 = aggregate "actors" query5
-
-query5 :: [Document]
-query5 = [ ["$group" =: ["_id" =: [ "day" =: "$birthday.day"
-                                  , "month" =: "$birthday.month"]
-                        , "count" =: ["$sum" =:  1]]]
-         , ["$group" =: ["_id" =: 0, "count" =: ["$sum" =:  1]]]]
+query5 :: Collection -> Action IO [Document]
+query5 col = aggregate col q
+    where
+        q = [ ["$group" =: ["_id" =: [ "day" =: String "$birthday.day"
+                                     , "month" =: String "$birthday.month"]
+                                     , "count" =: ["$sum" =:  Int32 1]]]
+            , ["$group" =: [ "_id" =: Int32 0
+                           , "count" =: ["$sum" =: Int32 1]]]]

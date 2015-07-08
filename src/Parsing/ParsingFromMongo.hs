@@ -19,13 +19,13 @@ parse1 = map parseDoc1
 data1 :: [(String, Int)] -> [Float]
 data1 d = map (\ x -> x * 100.0 / s) t
     where t' :: [Int]
-          t' = snd $ unzip $ d
+          t' = snd $ unzip d
           t  = map intToFloat t'
           s  = intToFloat $ sum t'
 
 label1 :: [(String, Int)] -> [String]
 label1 d = zipWith (++) (fst t) (intToStr $ snd t)
-    where t = unzip $ d :: ([String], [Int])
+    where t = unzip d -- :: ([String], [Int])
           intToStr = map ((", " ++) . show)
 
 sortOn :: Ord b => (a -> b) -> [a] -> [a]
@@ -60,13 +60,13 @@ extr3' doc = fromJust $ elemIndex (sel2 doc) zodiacSigns
 data2 :: [(String, String, Int)] -> [Float]
 data2 d = map (\ x -> x * 100.0 / s) t
     where t' :: [Int]
-          t' = sel3 $ unzip3 $ d
+          t' = sel3 $ unzip3 d
           t  = map intToFloat t'
           s  = intToFloat $ sum t'
 
 label2 :: [(String, String, Int)] -> [String]
-label2 d = zipWith3 (append3) (sel1 t) (sel2 t) (intToStr $ sel3 t)
-    where t = unzip3 $ d :: ([String], [String], [Int])
+label2 d = zipWith3 append3 (sel1 t) (sel2 t) (intToStr $ sel3 t)
+    where t = unzip3 d :: ([String], [String], [Int])
           intToStr = map ((", " ++) . show)
 
 append3 :: [a] -> [a] -> [a] -> [a]

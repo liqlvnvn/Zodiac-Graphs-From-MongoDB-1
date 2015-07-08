@@ -22,4 +22,5 @@ zodiacSigns = [ "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra"
               , "Scorpius", "Sagittarius", "Capricorn", "Aquarius", "Pisces"
               , "Nothing" ]
 
+fileName :: String
 fileName = "biographies.list"

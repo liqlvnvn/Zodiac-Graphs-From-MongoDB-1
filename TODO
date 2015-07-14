@@ -2,3 +2,4 @@
 - GnuPlotInAction 74 (108) - draw a histogramm
 - 122 - tic marker
 - Для каждого графика max, min, average, максимальное отклонение
+- в графиках с inf_zodiac попробовать сменить длину переходного знака с 7 на 10

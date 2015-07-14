@@ -16,4 +16,5 @@ main = do
     let d = parse3 d'
     print $ graph1 "First" a
     print $ graph2 "Second" b
-    print c
+    graph3 c
+    print "finish"

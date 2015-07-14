@@ -65,7 +65,8 @@ executable zodiacQueryFromMongoDB1
                        hs-gchart,
                        extra,
                        tuple,
-                       bson
+                       bson,
+                       gnuplot
 
   -- Directories containing source files.
   hs-source-dirs:      src,

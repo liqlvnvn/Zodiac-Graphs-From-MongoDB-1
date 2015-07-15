@@ -107,11 +107,6 @@ prepareData dal = final $ switch $ transpose $ map bb (aa (sorting dal))--map cc
          final (x:xs) = ("", map (\x -> snd x) x) : final xs
          final [] = []
 
-
-        -- cc :: (String, Int) -> (String, [Double])
-        -- cc d = (concat $ fst $ unzip d, map intToDouble (snd $ unzip d))
-
-
 --histogram2d :: Frame.T (Graph2D.T Int Double)
 histogram2d inf =
     Frame.cons (
@@ -134,3 +129,12 @@ histogram2d inf =
     ("1.0014", [192, 293, 458, 483, 890, 2000]) :
     []
     -}
+
+graph4 rec = GP.plotDefault $ list2d r
+    where
+        sorting = sortOn extr4 rec
+        r = map (\x -> snd x) sorting
+
+-- list2d :: Plot2D.T Int Integer
+list2d list =
+    Plot2D.list Graph2D.listPoints list

@@ -86,6 +86,9 @@ parseDoc3 doc = (b, n)
           d = at "day" t
           m = getMonth $ at "month" t
 
+extr4 :: (Birthday, Int) -> Birthday
+extr4 doc = fst doc
+
 stringToZodiac :: String -> Maybe Zodiac
 stringToZodiac zod = case zod of
     "Aries"       -> Just Aries

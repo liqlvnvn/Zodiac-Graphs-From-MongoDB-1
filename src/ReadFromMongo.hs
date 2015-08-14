@@ -46,15 +46,3 @@ query4 col = aggregate col q
         q = [["$group" =: [ "_id" =: [ "day" =: String "$birthday.day"
                                      , "month" =: String "$birthday.month"]
                           , "count" =: ["$sum" =:  Int32 1]]]]
-
-{-
--- | number of days with b-d's
-query5 :: Collection -> Action IO [Document]
-query5 col = aggregate col q
-    where
-        q = [ ["$group" =: ["_id" =: [ "day" =: String "$birthday.day"
-                                     , "month" =: String "$birthday.month"]
-                                     , "count" =: ["$sum" =:  Int32 1]]]
-            , ["$group" =: [ "_id" =: Int32 0
-                           , "count" =: ["$sum" =: Int32 1]]]]
--}

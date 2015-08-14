@@ -12,8 +12,8 @@ data Birthday = Birthday
     } deriving Show
 
 instance Eq Birthday where
-    Birthday {day = day1, month = month1, year = year1} ==
-        Birthday {day = day2, month = month2, year = year2} =
+    (==) Birthday {day = day1, month = month1, year = year1}
+         Birthday {day = day2, month = month2, year = year2} =
             (day1 == day2) && (month1 == month2)
 
 instance Ord Birthday where

@@ -1,7 +1,7 @@
 module Main where
 
 import ReadFromMongo
-import Parsing.ParsingFromMongo
+import Parsing.arsingFromMongo
 import ToFile
 
 main :: IO ()

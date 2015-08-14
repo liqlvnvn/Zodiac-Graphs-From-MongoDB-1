@@ -51,23 +51,20 @@ executable zodiacQueryFromMongoDB1
   main-is:             Main.hs
 
   -- Modules included in this executable, other than Main.
-  other-modules:       ReadFromMongo,
-                       Parsing,
-                       Parsing.ParsingFromMongo,
-                       --ParsingFromMongo,
-                       ToFile
+  other-modules:         ReadFromMongo
+                       , Parsing
+                       , Parsing.ParsingFromMongo
+                       , ToFile
 
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:
 
   -- Other library packages from which modules are imported.
-  build-depends:       base,
-                       mongoDB,
-                       hs-gchart,
-                       extra,
-                       tuple,
-                       bson,
-                       gnuplot
+  build-depends:         base
+                       , mongoDB
+                       , extra
+                       , tuple
+                       , bson
 
   -- Directories containing source files.
   hs-source-dirs:      src

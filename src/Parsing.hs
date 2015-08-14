@@ -1,11 +1,4 @@
-{-# LANGUAGE FlexibleInstances #-}
-
 module Parsing where
-
-import qualified Text.Read.Lex as L
-import GHC.Read
---import Text.ParserCombinators.ReadP
-import Text.ParserCombinators.ReadPrec
 
 data Person = Person
   { firstName :: String
@@ -26,28 +19,52 @@ instance Eq Birthday where
 instance Ord Birthday where
   compare (Birthday {day = d1, month = m1, year = y1})
           (Birthday {day = d2, month = m2, year = y2})
-            | (y1 > y2) = GT
-            | (y1 < y2) = LT
+            | y1 > y2 = GT
+            | y1 < y2 = LT
             | (y1 == y2) && (m1 > m2) = GT
             | (y1 == y2) && (m1 < m2) = LT
             | (y1 == y2) && (m1 == m2) && (d1 == d2) = EQ
             | (y1 == y2) && (m1 == m2) && (d1 > d2) = GT
             | (y1 == y2) && (m1 == m2) && (d1 < d2) = LT
+  compare Birthday{} Birthday{} = EQ
 
 data Month = January | February | March | April | May | June | July | August
            | September | October | November | December
-           deriving (Show, Eq, Ord)
+           deriving (Show, Eq, Ord, Read)
 
 data Zodiac = Aries | Taurus | Gemini | Cancer | Leo | Virgo | Libra | Scorpius
             | Sagittarius | Capricorn | Aquarius | Pisces
             deriving (Show, Eq, Ord, Read)
 
 type InfZodiac = Maybe Zodiac
+type NumberOfEntries = Int
 
-zodiacSigns :: [String]
-zodiacSigns = [ "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra"
-              , "Scorpius", "Sagittarius", "Capricorn", "Aquarius", "Pisces"
-              , "Nothing" ]
+type StatsOnSign      = (Zodiac, NumberOfEntries)
+type StatsOnInfSign   = (InfZodiac, NumberOfEntries)
+type StatsOnExactSign = (Zodiac, InfZodiac, NumberOfEntries)
+type StatsOnBirthday  = (Birthday, NumberOfEntries)
+
+type StatsOnAllSigns      = [StatsOnSign]
+type StatsOnAllInfSigns   = [StatsOnInfSign]
+type StatsOnAllExactSigns = [StatsOnExactSign]
+type StatsOnAllBirthdays  = [StatsOnBirthday]
 
 fileName :: String
 fileName = "biographies.list"
+
+stringToZodiac :: String -> Maybe Zodiac
+stringToZodiac zod = case zod of
+  "Aries"       -> Just Aries
+  "Taurus"      -> Just Taurus
+  "Gemini"      -> Just Gemini
+  "Cancer"      -> Just Cancer
+  "Leo"         -> Just Leo
+  "Virgo"       -> Just Virgo
+  "Libra"       -> Just Libra
+  "Scorpius"    -> Just Scorpius
+  "Sagittarius" -> Just Sagittarius
+  "Capricorn"   -> Just Capricorn
+  "Aquarius"    -> Just Aquarius
+  "Pisces"      -> Just Pisces
+  "Nothing"     -> Nothing
+  _             -> error "Wrong zodiac sign!"

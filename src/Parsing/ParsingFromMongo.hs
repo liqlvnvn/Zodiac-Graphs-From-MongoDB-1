@@ -1,13 +1,18 @@
 {-# LANGUAGE OverloadedStrings, ExtendedDefaultRules #-}
-module Parsing.ParsingFromMongo where
+
+module Parsing.ParsingFromMongo
+  (
+    sortOn
+  , parse1, parse2, parse3, parse4
+  , extr1, extr2, extr3, extr3', extr4
+  ) where
 
 import Parsing
 
 import Data.Bson
-import Data.Maybe (Maybe(..), fromJust)
 import Data.List
 import Data.Ord      ( comparing )
-import Data.Tuple.Select
+import Data.Tuple.Select (sel1, sel2)
 
 sortOn :: Ord b => (a -> b) -> [a] -> [a]
 sortOn f =
@@ -15,32 +20,32 @@ sortOn f =
 
 --
 -- First query
-parse1 :: [Document] -> [(Zodiac, Int)]
+parse1 :: [Document] -> StatsOnAllSigns
 parse1 = map parseDoc1
   where
-    parseDoc1 :: [Field] -> (Zodiac, Int)
+    parseDoc1 :: [Field] -> StatsOnSign
     parseDoc1 doc = (read (at "_id" doc) :: Zodiac, at "count" doc)
 
-extr1 :: (Zodiac, Int) -> Zodiac
-extr1 doc = fst doc
+extr1 :: StatsOnSign -> Zodiac
+extr1 = fst
 
 --
 -- Second query
-parse2 :: [Document] -> [(InfZodiac, Int)]
+parse2 :: [Document] -> StatsOnAllInfSigns
 parse2 = map parseDoc2
   where
-    parseDoc2 :: [Field] -> (InfZodiac, Int)
+    parseDoc2 :: [Field] -> StatsOnInfSign
     parseDoc2 doc = (stringToZodiac (at "_id" doc), at "count" doc)
 
-extr2 :: (InfZodiac, Int) -> InfZodiac
+extr2 :: StatsOnInfSign -> InfZodiac
 extr2 = fst
 
 --
 -- Third query
-parse3 :: [Document] -> [(Zodiac, InfZodiac, Int)]
+parse3 :: [Document] -> StatsOnAllExactSigns
 parse3 = map parseDoc3
 
-parseDoc3 :: [Field] -> (Zodiac, InfZodiac, Int)
+parseDoc3 :: [Field] -> StatsOnExactSign
 parseDoc3 doc = (z, z', n)
   where
     t  = at "_id" doc
@@ -48,58 +53,25 @@ parseDoc3 doc = (z, z', n)
     z' = stringToZodiac $ at "inf_zodiac" t
     n  = at "count" doc
 
-extr3 :: (Zodiac, InfZodiac, Int) -> Zodiac
+extr3 :: StatsOnExactSign -> Zodiac
 extr3 = sel1
 
-extr3' :: (Zodiac, InfZodiac, Int) -> InfZodiac
+extr3' :: StatsOnExactSign -> InfZodiac
 extr3' = sel2
 
 --
 -- Fourth query
-parse4 :: [Document] -> [(Birthday, Int)]
+parse4 :: [Document] -> StatsOnAllBirthdays
 parse4 = map parseDoc4
 
-parseDoc4 :: [Field] -> (Birthday, Int)
+parseDoc4 :: [Field] -> StatsOnBirthday
 parseDoc4 doc = (b, n)
   where
     b = Birthday { day = d, month = m, year = 1900 }
     n = at "count" doc
     t = at "_id" doc
     d = at "day" t
-    m = getMonth $ at "month" t
+    m = read (at "month" t) :: Month
 
-extr4 :: (Birthday, Int) -> Birthday
-extr4 doc = fst doc
-
-stringToZodiac :: String -> Maybe Zodiac
-stringToZodiac zod = case zod of
-  "Aries"       -> Just Aries
-  "Taurus"      -> Just Taurus
-  "Gemini"      -> Just Gemini
-  "Cancer"      -> Just Cancer
-  "Leo"         -> Just Leo
-  "Virgo"       -> Just Virgo
-  "Libra"       -> Just Libra
-  "Scorpius"    -> Just Scorpius
-  "Sagittarius" -> Just Sagittarius
-  "Capricorn"   -> Just Capricorn
-  "Aquarius"    -> Just Aquarius
-  "Pisces"      -> Just Pisces
-  "Nothing"     -> Nothing
-  _             -> error "Wrong zodiac sign!"
-
-getMonth :: String -> Month
-getMonth mon = case mon of
-  "January"   -> January
-  "February"  -> February
-  "March"     -> March
-  "April"     -> April
-  "May"       -> May
-  "June"      -> June
-  "July"      -> July
-  "August"    -> August
-  "September" -> September
-  "October"   -> October
-  "November"  -> November
-  "December"  -> December
-  _           -> error "Wrong month"
+extr4 :: StatsOnBirthday -> Birthday
+extr4 = fst

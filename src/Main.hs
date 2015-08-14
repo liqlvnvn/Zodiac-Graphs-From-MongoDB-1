@@ -16,6 +16,5 @@ main = do
   let d = parse4 d'
   writeFile "file1.txt" (convert1 a)
   writeFile "file2.txt" (convert2 b)
---  writeFile "file3.txt" (convert3 c)
-  --writeFile "file4.txt" (convert4 d)
-  --print b
+  writeFile "file3.txt" (convert3 c)
+  writeFile "file4.txt" (convert4 d)

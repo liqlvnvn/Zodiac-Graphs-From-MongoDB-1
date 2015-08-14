@@ -1,8 +1,9 @@
 module Main where
 
-import ReadFromMongo
-import Parsing.ParsingFromMongo
-import ToFile
+import ReadFromMongo ( readFromMongo, db, collection,
+                       query1, query2, query3, query4 )
+import Parsing.ParsingFromMongo ( parse1, parse2, parse3, parse4 )
+import ToFile ( convert1, convert2, convert3, convert4 )
 
 main :: IO ()
 main = do

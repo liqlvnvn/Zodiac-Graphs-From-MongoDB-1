@@ -1,7 +1,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ExtendedDefaultRules #-}
 
-module ReadFromMongo where
+module ReadFromMongo
+  (
+    db
+  , collection
+  , readFromMongo
+  , query1, query2, query3, query4
+  ) where
 
 import Database.MongoDB
 

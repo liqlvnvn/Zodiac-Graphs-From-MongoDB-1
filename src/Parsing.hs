@@ -1,4 +1,24 @@
-module Parsing where
+{-| Data types for describing actions.
+-}
+
+module Parsing
+  (
+    Person(..)
+  , Birthday(..)
+  , Month
+  , Zodiac
+  , InfZodiac
+  , StatsSign
+  , StatsInfSign
+  , StatsExactSign
+  , StatsBirthday
+  , StatsAllSigns
+  , StatsAllInfSigns
+  , StatsAllExactSigns
+  , StatsAllBirthdays
+  , fileName
+  , stringToZodiac
+  ) where
 
 data Person = Person
   { firstName :: String
@@ -39,15 +59,15 @@ data Zodiac = Aries | Taurus | Gemini | Cancer | Leo | Virgo | Libra | Scorpius
 type InfZodiac = Maybe Zodiac
 type NumberOfEntries = Int
 
-type StatsOnSign      = (Zodiac, NumberOfEntries)
-type StatsOnInfSign   = (InfZodiac, NumberOfEntries)
-type StatsOnExactSign = (Zodiac, InfZodiac, NumberOfEntries)
-type StatsOnBirthday  = (Birthday, NumberOfEntries)
+type StatsSign      = (Zodiac, NumberOfEntries)
+type StatsInfSign   = (InfZodiac, NumberOfEntries)
+type StatsExactSign = (Zodiac, InfZodiac, NumberOfEntries)
+type StatsBirthday  = (Birthday, NumberOfEntries)
 
-type StatsOnAllSigns      = [StatsOnSign]
-type StatsOnAllInfSigns   = [StatsOnInfSign]
-type StatsOnAllExactSigns = [StatsOnExactSign]
-type StatsOnAllBirthdays  = [StatsOnBirthday]
+type StatsAllSigns      = [StatsSign]
+type StatsAllInfSigns   = [StatsInfSign]
+type StatsAllExactSigns = [StatsExactSign]
+type StatsAllBirthdays  = [StatsBirthday]
 
 fileName :: String
 fileName = "biographies.list"

@@ -52,8 +52,8 @@ executable zodiacQueryFromMongoDB1
 
   -- Modules included in this executable, other than Main.
   other-modules:       ReadFromMongo,
-                       CreateGraphs,
                        Parsing,
+                       Parsing.ParsingFromMongo,
                        ParsingFromMongo,
                        ToFile
 

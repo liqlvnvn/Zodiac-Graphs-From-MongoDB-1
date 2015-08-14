@@ -4,8 +4,6 @@ import ReadFromMongo
 import Parsing.ParsingFromMongo
 import ToFile
 
-import Data.List (sort)
-
 main :: IO ()
 main = do
     a' <- readFromMongo db (query1 collection)
@@ -16,10 +14,8 @@ main = do
     let b = parse1 b'
     let c = parse2 c'
     let d = parse3 d'
-    print a'
-    print $ a
     writeFile "file1.txt" (convert1 a)
-    -- print $ graph2 "Second" b
-    -- graph3 c
-    -- print $ sortOn extr4 d
-    print "finish"
+    writeFile "file2.txt" (convert2 b)
+    writeFile "file3.txt" (convert3 c)
+    writeFile "file4.txt" (convert4 d)
+    --print d

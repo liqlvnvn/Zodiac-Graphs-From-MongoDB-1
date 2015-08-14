@@ -54,7 +54,7 @@ executable zodiacQueryFromMongoDB1
   other-modules:       ReadFromMongo,
                        Parsing,
                        Parsing.ParsingFromMongo,
-                       ParsingFromMongo,
+                       --ParsingFromMongo,
                        ToFile
 
   -- LANGUAGE extensions used by modules in this package.
@@ -70,8 +70,8 @@ executable zodiacQueryFromMongoDB1
                        gnuplot
 
   -- Directories containing source files.
-  hs-source-dirs:      src,
-                       src/Parsing
+  hs-source-dirs:      src
+                       , src/Parsing
 
   -- Base language which the package is written in.
   default-language:    Haskell2010

@@ -5,37 +5,48 @@ import Parsing
 
 import Data.Tuple.Select
 
-convert1 :: [(String, Int)] -> String
-convert1 list = foldr1 (++) $ map conv (sortOn extr1 list)
+convert1 :: [(Zodiac, Int)] -> String
+convert1 list = foldr1 (++) $ map toString (sortOn extr1 list)
   where
-    conv :: (String, Int) -> String
-    conv tpl = fst tpl ++ " " ++ (show . snd) tpl ++ "\n"
+    toString :: (Zodiac, Int) -> String
+    toString tpl = (show . fst) tpl ++ " " ++ (show . snd) tpl ++ "\n"
 
-convert2 :: [(String, Int)] -> String
-convert2 list = foldr1 (++) $ map conv (sortOn extr2 list)
+convert2 :: [(InfZodiac, Int)] -> String
+convert2 list = foldr1 (++) $ map toString
+                                  (mvNothingToTheEnd $ sortOn extr2 list)
   where
-    conv :: (String, Int) -> String
-    conv tpl = fst tpl ++ " " ++ (show . snd) tpl ++ "\n"
+    toString :: (InfZodiac, Int) -> String
+    toString tpl = maybe "Nothing" show (fst tpl) ++ " "
+                   ++ (show . snd) tpl ++ "\n"
+    mvNothingToTheEnd :: [(InfZodiac, Int)] -> [(InfZodiac, Int)]
+    mvNothingToTheEnd (x:xs) = xs ++ [x]
+    mvNothingToTheEnd []     = []
 
-convert3 :: [(String, String, Int)] -> String
-convert3 list = foldr1 (++) $ map conv (switch2And3 $ sorting list)
+convert3 :: [(Zodiac, InfZodiac, Int)] -> String
+convert3 list = foldr1 (++) $ map toString (switch2And3 $ sorting list)
   where
-    sorting :: [(String, String, Int)] -> [(String, String, Int)]
+    sorting :: [(Zodiac, InfZodiac, Int)] -> [(Zodiac, InfZodiac, Int)]
     sorting d = sortOn extr3 (sortOn extr3' d)
-    switch2And3 :: [(String, String, Int)] -> [(String, String, Int)]
+    {-
+    -- After sort:           Need:
+    -- Aries/Taurus 6462     Aries/Taurus 6462
+    -- Aries/Nothing 15589   Aries/Pisces 6490
+    -- Aries/Nothing 15589   Aries/Pisces 6490
+    -}
+    switch2And3 :: [(Zodiac, InfZodiac, Int)] -> [(Zodiac, InfZodiac, Int)]
     switch2And3 (a:b:c:xs) = a:c:b:switch2And3 xs
     switch2And3 []         = []
     switch2And3 [a]        = [a]
     switch2And3 [a, b]     = [a, b]
-    conv :: (String, String, Int) -> String
-    conv tpl = sel1 tpl ++ "/" ++ sel2 tpl ++ " "
+    toString :: (Zodiac, InfZodiac, Int) -> String
+    toString tpl = (show . sel1) tpl ++ "/" ++ maybe "Nothing" show (sel2 tpl) ++ " "
                ++ (show . sel3) tpl ++ "\n"
 
 convert4 :: [(Birthday, Int)] -> String
-convert4 list = foldr1 (++) $ map conv (sorting list)
+convert4 list = foldr1 (++) $ map toString (sorting list)
   where
     sorting :: [(Birthday, Int)] -> [(Birthday, Int)]
     sorting d = sortOn extr4 d
-    conv :: (Birthday, Int) -> String
-    conv tpl = (show . day . fst) tpl ++ " " ++ (show . month . fst) tpl
+    toString :: (Birthday, Int) -> String
+    toString tpl = (show . day . fst) tpl ++ " " ++ (show . month . fst) tpl
                ++ " " ++ (show . snd) tpl ++ "\n"

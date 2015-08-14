@@ -4,58 +4,63 @@ module Parsing.ParsingFromMongo where
 import Parsing
 
 import Data.Bson
-import Data.Maybe
+import Data.Maybe (Maybe(..), fromJust)
 import Data.List
 import Data.Ord      ( comparing )
 import Data.Tuple.Select
-
-parse1 :: [Document] -> [(String, Int)]
-parse1 = map parseDoc1
-  where
-    parseDoc1 :: [Field] -> (String, Int)
-    parseDoc1 doc = (at "_id" doc, at "count" doc)
 
 sortOn :: Ord b => (a -> b) -> [a] -> [a]
 sortOn f =
   map snd . sortBy (comparing fst) . map (\x -> let y = f x in y `seq` (y, x))
 
-extr1 :: (String, Int) -> Zodiac
-extr1 doc = fromJust $ stringToZodiac $ fst doc
-
-extr2 :: (String, Int) -> Int
-extr2 doc = fromJust $ elemIndex (fst doc) zodiacSigns
-
 --
--- Third graph
-
-parse2 :: [Document] -> [(String, String, Int)]
-parse2 = map parseDoc2
-
-parseDoc2 :: [Field] -> (String, String, Int)
-parseDoc2 doc = (z, z', n)
+-- First query
+parse1 :: [Document] -> [(Zodiac, Int)]
+parse1 = map parseDoc1
   where
-    t  = at "_id" doc
-    z  = at "zodiac" t
-    z' = at "inf_zodiac" t
-    n  = at "count" doc
+    parseDoc1 :: [Field] -> (Zodiac, Int)
+    parseDoc1 doc = (read (at "_id" doc) :: Zodiac, at "count" doc)
 
-extr3 :: (String, String, Int) -> Int
-extr3 doc = fromJust $ elemIndex (sel1 doc) zodiacSigns
-
-extr3' :: (String, String, Int) -> Int
-extr3' doc = fromJust $ elemIndex (sel2 doc) zodiacSigns
-
-append3 :: [a] -> [a] -> [a] -> [a]
-append3 a b c = a ++ b ++ c
+extr1 :: (Zodiac, Int) -> Zodiac
+extr1 doc = fst doc
 
 --
--- Third graph
+-- Second query
+parse2 :: [Document] -> [(InfZodiac, Int)]
+parse2 = map parseDoc2
+  where
+    parseDoc2 :: [Field] -> (InfZodiac, Int)
+    parseDoc2 doc = (stringToZodiac (at "_id" doc), at "count" doc)
 
-parse3 :: [Document] -> [(Birthday, Int)]
+extr2 :: (InfZodiac, Int) -> InfZodiac
+extr2 = fst
+
+--
+-- Third query
+parse3 :: [Document] -> [(Zodiac, InfZodiac, Int)]
 parse3 = map parseDoc3
 
-parseDoc3 :: [Field] -> (Birthday, Int)
-parseDoc3 doc = (b, n)
+parseDoc3 :: [Field] -> (Zodiac, InfZodiac, Int)
+parseDoc3 doc = (z, z', n)
+  where
+    t  = at "_id" doc
+    z  = read (at "zodiac" t) :: Zodiac
+    z' = stringToZodiac $ at "inf_zodiac" t
+    n  = at "count" doc
+
+extr3 :: (Zodiac, InfZodiac, Int) -> Zodiac
+extr3 = sel1
+
+extr3' :: (Zodiac, InfZodiac, Int) -> InfZodiac
+extr3' = sel2
+
+--
+-- Fourth query
+parse4 :: [Document] -> [(Birthday, Int)]
+parse4 = map parseDoc4
+
+parseDoc4 :: [Field] -> (Birthday, Int)
+parseDoc4 doc = (b, n)
   where
     b = Birthday { day = d, month = m, year = 1900 }
     n = at "count" doc

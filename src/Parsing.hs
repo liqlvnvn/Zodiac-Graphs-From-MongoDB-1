@@ -1,4 +1,11 @@
+{-# LANGUAGE FlexibleInstances #-}
+
 module Parsing where
+
+import qualified Text.Read.Lex as L
+import GHC.Read
+--import Text.ParserCombinators.ReadP
+import Text.ParserCombinators.ReadPrec
 
 data Person = Person
   { firstName :: String
@@ -33,7 +40,9 @@ data Month = January | February | March | April | May | June | July | August
 
 data Zodiac = Aries | Taurus | Gemini | Cancer | Leo | Virgo | Libra | Scorpius
             | Sagittarius | Capricorn | Aquarius | Pisces
-            deriving (Show, Eq, Ord)
+            deriving (Show, Eq, Ord, Read)
+
+type InfZodiac = Maybe Zodiac
 
 zodiacSigns :: [String]
 zodiacSigns = [ "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra"

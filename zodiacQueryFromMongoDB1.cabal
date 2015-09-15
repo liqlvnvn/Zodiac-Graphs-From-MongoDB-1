@@ -65,6 +65,7 @@ executable zodiacQueryFromMongoDB1
                        , extra
                        , tuple
                        , bson
+                       , filepath
 
   -- Directories containing source files.
   hs-source-dirs:      src

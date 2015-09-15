@@ -54,7 +54,21 @@ data Month = January | February | March | April | May | June | July | August
 
 data Zodiac = Aries | Taurus | Gemini | Cancer | Leo | Virgo | Libra | Scorpius
             | Sagittarius | Capricorn | Aquarius | Pisces
-            deriving (Show, Eq, Ord, Read)
+            deriving (Eq, Ord, Read)
+
+instance Show Zodiac where
+  show Aries       = "ARI"
+  show Taurus      = "TAU"
+  show Gemini      = "GEM"
+  show Cancer      = "CAN"
+  show Leo         = "LEO"
+  show Virgo       = "VIR"
+  show Libra       = "LIB"
+  show Scorpius    = "SCO"
+  show Sagittarius = "SAG"
+  show Capricorn   = "CAP"
+  show Aquarius    = "AQU"
+  show Pisces      = "PIS"
 
 type InfZodiac = Maybe Zodiac
 type NumberOfEntries = Int

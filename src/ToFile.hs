@@ -25,7 +25,7 @@ convert1 :: StatsAllSigns -> String
 convert1 list = foldr1 (++) $ map toString (sortOn extr1 list)
   where
     toString :: StatsSign -> String
-    toString tpl = (show . fst) tpl ++ " " ++ (show . snd) tpl ++ "\n"
+    toString tpl = (show . fst) tpl ++ "\t" ++ (show . snd) tpl ++ "\n"
 
 -- | query2
 convert2 :: StatsAllInfSigns -> String

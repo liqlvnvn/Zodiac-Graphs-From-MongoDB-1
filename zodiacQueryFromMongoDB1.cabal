@@ -55,6 +55,7 @@ executable zodiacQueryFromMongoDB1
                        , Parsing
                        , Parsing.ParsingFromMongo
                        , ToFile
+                       , SimpleAnalysis
 
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:

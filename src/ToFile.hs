@@ -13,10 +13,11 @@ module ToFile
 import Parsing ( Birthday(..), 
                  StatsInfSign, StatsExactSign, StatsBirthday,
                  StatsAllSigns, StatsAllInfSigns, StatsAllExactSigns,
-                 StatsAllBirthdays )
+                 StatsAllBirthdays, AllStatsOnSomeSigns )
 import Data.Tuple.Select ( sel1, sel2, sel3 )
 import Data.Ord          ( comparing )
 import Data.List         ( sortBy, groupBy )
+import SimpleAnalysis
 
 -- | query1
 convert1 :: StatsAllSigns -> String
@@ -86,3 +87,32 @@ sortOn :: Ord b => (a -> b) -> [a] -> [a]
 sortOn f =
   map snd . sortBy (comparing fst) . map (\x -> let y = f x
                                                 in y `seq` (y, x))
+
+-- Functions for writing the results of the simple analysis
+-- For first and second graph
+mkAnalysisOfGraph :: AllStatsOnSomeSigns -> String
+mkAnalysisOfGraph stats = 
+  concat [ "Average = ", show $ average, "\n\n"
+         , "Top5:\n"
+         , showTable $ top5Signs stats, "\n\n"
+         , "Top5 of the lowest\n"
+         , showTable $ lowest5Signs stats, "\n"
+         ]
+    where
+      average = averageOf stats
+      difference = diffFromAverage stats average
+      differenceIn = diffFromAverageInPercentages difference average
+      showTable = map (\(zodiac, number) -> 
+                        concat [ show zodiac, "\t", show number, "\t" 
+                               , show $ difference, "\t"
+                               , show $ differenceIn, "\n"])
+
+-- For third
+mkAnalysisOf3rdGraph :: StatsAllExactSigns -> String
+mkAnalysisOf3rdGraph = undefined
+
+-- For fourth
+mkAnalysisOf4rdGraph :: StatsAllBirthdays -> String
+mkAnalysisOf4rdGraph = undefined
+
+

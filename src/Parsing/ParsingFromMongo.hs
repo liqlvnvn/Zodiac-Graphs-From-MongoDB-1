@@ -6,15 +6,13 @@
 {-# LANGUAGE ExtendedDefaultRules #-}
 
 module Parsing.ParsingFromMongo
-  (
-    parse1, parse2, parse3, parse4
+  ( parse1, parse2, parse3, parse4
   ) where
 
-import Parsing ( Birthday(..), Zodiac, Month, StatsAllSigns,
-                 StatsAllInfSigns, StatsAllExactSigns,
-                 StatsAllBirthdays, StatsSign, StatsInfSign,
-                 StatsExactSign, StatsBirthday, stringToZodiac)
-
+import Parsing   ( Birthday(..), Zodiac, Month, StatsAllSigns,
+                   StatsAllInfSigns, StatsAllExactSigns,
+                   StatsAllBirthdays, StatsSign, StatsInfSign,
+                   StatsExactSign, StatsBirthday, stringToZodiac)
 import Data.Bson ( Document, Field, at )
 
 -- | First query

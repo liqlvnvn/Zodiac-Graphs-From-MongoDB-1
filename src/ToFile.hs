@@ -10,25 +10,24 @@ module ToFile
   , convert4
   ) where
 
-import Parsing ( Birthday(..), Zodiac, InfZodiac, StatsSign,
+import Parsing ( Birthday(..), 
                  StatsInfSign, StatsExactSign, StatsBirthday,
                  StatsAllSigns, StatsAllInfSigns, StatsAllExactSigns,
                  StatsAllBirthdays )
 import Data.Tuple.Select ( sel1, sel2, sel3 )
-import Data.Ord ( comparing )
-import Data.List ( sortBy, groupBy )
+import Data.Ord          ( comparing )
+import Data.List         ( sortBy, groupBy )
 
 -- | query1
 convert1 :: StatsAllSigns -> String
-convert1 list = foldr1 (++) $ map toString (sortOn extr1 list)
+convert1 list = foldr1 (++) $ map toString (sortOn fst list)
   where
-    toString :: StatsSign -> String
     toString tpl = (show . fst) tpl ++ "\t" ++ (show . snd) tpl ++ "\n"
 
 -- | query2
 convert2 :: StatsAllInfSigns -> String
 convert2 list = foldr1 (++) $ map toString
-                                  (mvNothingToTheEnd $ sortOn extr2 list)
+                                  (mvNothingToTheEnd $ sortOn fst list)
   where
     toString :: StatsInfSign -> String
     toString tpl = maybe "Nothing" show (fst tpl) ++ " "
@@ -43,7 +42,7 @@ convert3 :: StatsAllExactSigns -> String
 convert3 list = concat $ toString (switch1And2 $ sorting list)
   where
     sorting :: StatsAllExactSigns -> StatsAllExactSigns
-    sorting d = sortOn extr3 (sortOn extr3' d)
+    sorting d = sortOn sel1 (sortOn sel2 d)
     {-
     -- After sort:           Need:
     -- Aries/Nothing 15589   Aries/Taurus 6462
@@ -56,14 +55,12 @@ convert3 list = concat $ toString (switch1And2 $ sorting list)
     switch1And2 [a]        = [a]
     switch1And2 [a, b]     = [a, b]
     toString :: StatsAllExactSigns -> [String]
-    toString tpl = [v | a:b:c:[] <- groupBy (comp) tpl,
+    toString tpl = [v | a:b:c:[] <- groupBy (\x y -> (sel1 x) == (sel1 y)) tpl,
                         let x = show $ sel1 a,
                         let y = show $ sel3 a,
                         let z = show $ sel3 b,
                         let s = show $ sel3 c,
                         let v = concat [x, " ", y, " ", z," ", s,"\n"]]
-      where
-        comp a x = (sel1 a) == (sel1 x)
 {-
     This is version look like
     Aries/Nothing 15589   Aries/Taurus 6462
@@ -77,10 +74,8 @@ convert3 list = concat $ toString (switch1And2 $ sorting list)
 
 -- | query4
 convert4 :: StatsAllBirthdays -> String
-convert4 list = foldr1 (++) $ map toString (sorting list)
+convert4 list = foldr1 (++) $ map toString (sortOn fst list)
   where
-    sorting :: StatsAllBirthdays -> StatsAllBirthdays
-    sorting = sortOn extr4
     toString :: StatsBirthday -> String
     toString tpl = (show . day . fst) tpl ++ " "
                    ++ (show . month . fst) tpl
@@ -91,18 +86,3 @@ sortOn :: Ord b => (a -> b) -> [a] -> [a]
 sortOn f =
   map snd . sortBy (comparing fst) . map (\x -> let y = f x
                                                 in y `seq` (y, x))
-
-extr1 :: StatsSign -> Zodiac
-extr1 = fst
-
-extr2 :: StatsInfSign -> InfZodiac
-extr2 = fst
-
-extr3 :: StatsExactSign -> Zodiac
-extr3 = sel1
-
-extr3' :: StatsExactSign -> InfZodiac
-extr3' = sel2
-
-extr4 :: StatsBirthday -> Birthday
-extr4 = fst

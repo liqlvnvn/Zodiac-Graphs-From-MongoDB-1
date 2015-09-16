@@ -2,8 +2,7 @@
 {-# LANGUAGE ExtendedDefaultRules #-}
 
 module ReadFromMongo
-  (
-    db
+  ( db
   , collection
   , readFromMongo
   , query1, query2, query3, query4

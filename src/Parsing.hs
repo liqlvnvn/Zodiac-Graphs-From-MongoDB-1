@@ -2,8 +2,7 @@
 -}
 
 module Parsing
-  (
-    Person(..)
+  ( Person(..)
   , Birthday(..)
   , Month
   , Zodiac

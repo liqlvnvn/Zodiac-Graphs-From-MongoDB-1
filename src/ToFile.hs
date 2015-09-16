@@ -4,21 +4,19 @@
 -}
 
 module ToFile
-  (
-    convert1
+  ( convert1
   , convert2
   , convert3
   , convert4
   ) where
 
-import Parsing (  Birthday(..), Zodiac, InfZodiac, StatsSign,
-                  StatsInfSign, StatsExactSign, StatsBirthday,
-                  StatsAllSigns, StatsAllInfSigns, StatsAllExactSigns,
-                  StatsAllBirthdays )
-
+import Parsing ( Birthday(..), Zodiac, InfZodiac, StatsSign,
+                 StatsInfSign, StatsExactSign, StatsBirthday,
+                 StatsAllSigns, StatsAllInfSigns, StatsAllExactSigns,
+                 StatsAllBirthdays )
 import Data.Tuple.Select ( sel1, sel2, sel3 )
 import Data.Ord ( comparing )
-import Data.List ( sortBy )
+import Data.List ( sortBy, groupBy )
 
 -- | query1
 convert1 :: StatsAllSigns -> String
@@ -41,7 +39,8 @@ convert2 list = foldr1 (++) $ map toString
 
 -- | query3
 convert3 :: StatsAllExactSigns -> String
-convert3 list = foldr1 (++) $ map toString (switch1And2 $ sorting list)
+--convert3 list = foldr1 (++) $ map toString (switch1And2 $ sorting list)
+convert3 list = concat $ toString (switch1And2 $ sorting list)
   where
     sorting :: StatsAllExactSigns -> StatsAllExactSigns
     sorting d = sortOn extr3 (sortOn extr3' d)
@@ -56,10 +55,25 @@ convert3 list = foldr1 (++) $ map toString (switch1And2 $ sorting list)
     switch1And2 []         = []
     switch1And2 [a]        = [a]
     switch1And2 [a, b]     = [a, b]
-    toString :: StatsExactSign -> String
+    toString :: StatsAllExactSigns -> [String]
+    toString tpl = [v | a:b:c:[] <- groupBy (comp) tpl,
+                        let x = show $ sel1 a,
+                        let y = show $ sel3 a,
+                        let z = show $ sel3 b,
+                        let s = show $ sel3 c,
+                        let v = concat [x, " ", y, " ", z," ", s,"\n"]]
+      where
+        comp a x = (sel1 a) == (sel1 x)
+{-
+    This is version look like
+    Aries/Nothing 15589   Aries/Taurus 6462
+    Aries/Taurus 6462     Aries/Nothing 15589
+    Aries/Pisces 6490
+
     toString tpl = (show . sel1) tpl ++ "/"
                    ++ maybe "Nothing" show (sel2 tpl)
-                   ++ " " ++ (show . sel3) tpl ++ "\n"
+                     ++ " " ++ (show . sel3) tpl ++ "\n"
+-}
 
 -- | query4
 convert4 :: StatsAllBirthdays -> String

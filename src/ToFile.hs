@@ -90,7 +90,7 @@ sortOn f =
 
 -- Functions for writing the results of the simple analysis
 -- For first and second graph
-mkAnalysisOfGraph :: AllStatsOnSomeSigns -> String
+--mkAnalysisOfGraph :: AllStatsOnSomeSigns -> String
 mkAnalysisOfGraph stats = 
   concat [ "Average = ", show $ average, "\n\n"
          , "Top5:\n"
@@ -100,12 +100,13 @@ mkAnalysisOfGraph stats =
          ]
     where
       average = averageOf stats
-      difference = diffFromAverage stats average
-      differenceIn = diffFromAverageInPercentages difference average
-      showTable = map (\(zodiac, number) -> 
+      difference st = diffFromAverage st average
+      differenceIn st = diffFromAverageInPercentages (difference st) average
+--      showTable :: [(a, Int)] -> String
+      showTable st = concat $ map (\x@(zodiac, number) -> 
                         concat [ show zodiac, "\t", show number, "\t" 
-                               , show $ difference, "\t"
-                               , show $ differenceIn, "\n"])
+                               , show $ difference x, "\t"
+                               , show $ differenceIn, "\n"]) st
 
 -- For third
 mkAnalysisOf3rdGraph :: StatsAllExactSigns -> String

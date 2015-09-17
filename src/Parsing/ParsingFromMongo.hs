@@ -9,28 +9,27 @@ module Parsing.ParsingFromMongo
   ( parse1, parse2, parse3, parse4
   ) where
 
-import Parsing   ( Birthday(..), Zodiac, Month, StatsAllSigns,
-                   StatsAllInfSigns, StatsAllExactSigns,
-                   StatsAllBirthdays, StatsSign, StatsInfSign,
+import Parsing   ( Birthday(..), Zodiac, Month,
+                   StatsSign, StatsInfSign,
                    StatsExactSign, StatsBirthday, stringToZodiac)
 import Data.Bson ( Document, Field, at )
 
 -- | First query
-parse1 :: [Document] -> StatsAllSigns
+parse1 :: [Document] -> [StatsSign]
 parse1 = map parseDoc1
   where
     parseDoc1 :: [Field] -> StatsSign
     parseDoc1 doc = (read (at "_id" doc) :: Zodiac, at "count" doc)
 
 -- | Second query
-parse2 :: [Document] -> StatsAllInfSigns
+parse2 :: [Document] -> [StatsInfSign]
 parse2 = map parseDoc2
   where
     parseDoc2 :: [Field] -> StatsInfSign
     parseDoc2 doc = (stringToZodiac (at "_id" doc), at "count" doc)
 
 -- | Third query
-parse3 :: [Document] -> StatsAllExactSigns
+parse3 :: [Document] -> [StatsExactSign]
 parse3 = map parseDoc3
   where
     parseDoc3 :: [Field] -> StatsExactSign
@@ -42,7 +41,7 @@ parse3 = map parseDoc3
         numberOfEntries  = at "count" doc
 
 -- | Fourth query
-parse4 :: [Document] -> StatsAllBirthdays
+parse4 :: [Document] -> [StatsBirthday]
 parse4 = map parseDoc4
   where
     parseDoc4 :: [Field] -> StatsBirthday

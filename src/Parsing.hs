@@ -11,11 +11,6 @@ module Parsing
   , StatsInfSign
   , StatsExactSign
   , StatsBirthday
-  , StatsAllSigns
-  , StatsAllInfSigns
-  , StatsAllExactSigns
-  , StatsAllBirthdays
-  , AllStatsOnSomeSigns
   , fileName
   , stringToZodiac
   ) where
@@ -77,14 +72,6 @@ type StatsSign      = (Zodiac, NumberOfEntries)
 type StatsInfSign   = (InfZodiac, NumberOfEntries)
 type StatsExactSign = (Zodiac, InfZodiac, NumberOfEntries)
 type StatsBirthday  = (Birthday, NumberOfEntries)
-
-type StatsAllSigns      = [StatsSign]
-type StatsAllInfSigns   = [StatsInfSign]
-type StatsAllExactSigns = [StatsExactSign]
-type StatsAllBirthdays  = [StatsBirthday]
-
-data StatsOnSomeSign = StatsSign | StatsInfSign
-data AllStatsOnSomeSigns = StatsAllSigns | StatsAllInfSigns
 
 fileName :: String
 fileName = "biographies.list"

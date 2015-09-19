@@ -9,6 +9,7 @@ module ToFile
   , convert3
   , convert4
   , mkAnalysisOfGraph1
+  , mkAnalysisOf2ndGraph
   ) where
 
 import Parsing ( Birthday(..), StatsSign, 
@@ -18,8 +19,9 @@ import SimpleAnalysis
 
 import Data.Tuple.Select ( sel1, sel2, sel3 )
 import Data.Ord          ( comparing )
-import Data.List         ( sortBy, groupBy )
+import Data.List         ( sortBy, groupBy, partition )
 import Text.Printf
+import Data.Maybe        ( fromJust )
 
 -- | query1
 convert1 :: [StatsSign] -> String
@@ -92,7 +94,7 @@ sortOn f =
 
 -- Functions for writing the results of the simple analysis
 -- For first and second graph
-mkAnalysisOfGraph1 :: [StatsSign] -> String
+--mkAnalysisOfGraph1 :: [StatsSign] -> String
 mkAnalysisOfGraph1 stats = 
   concat [ "Average = ", show $ average, "\n\n"
          , "Top5:\n"
@@ -104,14 +106,27 @@ mkAnalysisOfGraph1 stats =
       average = averageOf stats
       difference st = diffFromAverage st average
       differenceIn st = diffFromAverageInPercentages (difference st) average
-      showTable :: [StatsSign] -> String
+--      showTable :: [StatsSign] -> String
       showTable st = concat $ map (\x@(zodiac, number) -> concat 
                                     [ show zodiac, "\t", show number, "\t" 
                                     , printf "%10.2f" (difference x)
                                     , "\t"
                                     , printf "%5.2f" (differenceIn x)
-                                    , "\n"]) st
+                                    , "\n"]
+                                  ) st
 
+-- For second
+mkAnalysisOf2ndGraph :: [StatsInfSign] -> String
+mkAnalysisOf2ndGraph stats = concat [ mkAnalysisOfGraph1 $ map (\(x,y) ->
+                                        (fromJust x,y)) $ fst temp
+                                    , "Nothing", "\t"
+                                    , show $ snd ((snd temp) !! 0)
+                                    , "\n"
+                                    ]
+  where
+    -- stats -> ([(Maybe zodiac,num)],[])
+    temp = partition (\(x,_) -> x /= Nothing) stats
+    
 -- For third
 mkAnalysisOf3rdGraph :: [StatsExactSign] -> String
 mkAnalysisOf3rdGraph = undefined

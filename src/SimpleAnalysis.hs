@@ -2,7 +2,8 @@ module SimpleAnalysis where
 
 import Parsing
 
-import Data.List ( sortBy )
+import Data.List         ( sortBy )
+import Data.Tuple.Select ( sel3 )
 
 -- Проблема в типе а функция из ToFile не может show (a0)
 --averageOf :: [(a, Int)] -> Float
@@ -30,13 +31,16 @@ top5AndLowestSigns stats = (take 5 sorted, take 5 $ reverse sorted)
 
 
 -- Analysis of the third
-top5By1and2Signs, lowest5By1and2Signs :: [StatsExactSign]
-                                      -> [StatsExactSign]
-top5By1and2Signs = undefined
-lowest5By1and2Signs = undefined
+top5AndLowestFullSigns :: [StatsExactSign] 
+                       -> ([StatsExactSign], [StatsExactSign])
+top5AndLowestFullSigns = undefined
 
 averageOfFullSigns :: [StatsExactSign] -> Float
-averageOfFullSigns = undefined
+averageOfFullSigns stats = x / y
+  where
+    x = fromIntegral $ snd tupleAvg
+    y = fromIntegral $ fst tupleAvg
+    tupleAvg = foldr (\(_,_,a) (b,c) -> (b+1,a+c)) (0,0) stats
 
 diffFromAverageForFullSigns :: [StatsExactSign] -> Float -> Float
 diffFromAverageForFullSigns = undefined

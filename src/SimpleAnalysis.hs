@@ -55,6 +55,5 @@ averageOfFullSigns stats = x / y
 diffFromAverageForFullSigns stats avrg= (fromIntegral $ sel3 stats) - avrg
 
 -- Analysis of the fourth
-top5Days, lowest5Days :: [StatsBirthday] -> [StatsBirthday]
-top5Days = undefined
-lowest5Days = undefined
+top5AndLowestBirthday :: [StatsBirthday] -> [StatsBirthday]
+top5AndLowestBirthday = undefined

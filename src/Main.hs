@@ -22,4 +22,5 @@ main = do
   writeFile ("data" </> "file4.txt") (convert4 d)
 --  putStrLn $ mkAnalysisOfGraph1 b
 --  putStrLn $ mkAnalysisOf2ndGraph b
-  putStrLn $ mkAnalysisOf3rdGraph c
+--  putStrLn $ mkAnalysisOf3rdGraph c
+  putStrLn $ mkAnalysisOfGraph1 d

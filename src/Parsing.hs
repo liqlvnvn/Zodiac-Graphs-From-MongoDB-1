@@ -15,6 +15,8 @@ module Parsing
   , stringToZodiac
   ) where
 
+import Text.Printf
+
 data Person = Person
   { firstName :: String
   , lastName  :: String
@@ -24,7 +26,11 @@ data Birthday = Birthday
   { day   :: Int
   , month :: Month
   , year  :: Int
-  } deriving Show
+  } 
+
+instance Show Birthday where
+  show Birthday {day = d, month = m, year = y} = show m ++ " " 
+                                                        ++ printf "%2d" d
 
 instance Eq Birthday where
   (==) Birthday {day = d1, month = m1, year = y1}
@@ -45,7 +51,21 @@ instance Ord Birthday where
 
 data Month = January | February | March | April | May | June | July | August
            | September | October | November | December
-           deriving (Show, Eq, Ord, Read)
+           deriving (Eq, Ord, Read)
+
+instance Show Month where
+  show January   = "Jan"
+  show February  = "Feb"
+  show March     = "Mar"
+  show April     = "Apr"
+  show May       = "May"
+  show June      = "Jun"
+  show July      = "Jul"
+  show August    = "Aug"
+  show September = "Sep"
+  show October   = "Oct"
+  show November  = "Nov"
+  show December  = "Dec"
 
 data Zodiac = Aries | Taurus | Gemini | Cancer | Leo | Virgo | Libra | Scorpius
             | Sagittarius | Capricorn | Aquarius | Pisces

@@ -10,6 +10,7 @@ module ToFile
   , convert4
   , mkAnalysisOfGraph1
   , mkAnalysisOf2ndGraph
+  , mkAnalysisOf3rdGraph
   ) where
 
 import Parsing ( Birthday(..), StatsSign, 
@@ -21,7 +22,7 @@ import Data.Tuple.Select ( sel1, sel2, sel3 )
 import Data.Ord          ( comparing )
 import Data.List         ( sortBy, groupBy, partition )
 import Text.Printf
-import Data.Maybe        ( fromJust )
+import Data.Maybe        ( fromJust, fromMaybe )
 
 -- | query1
 convert1 :: [StatsSign] -> String
@@ -129,8 +130,29 @@ mkAnalysisOf2ndGraph stats = concat [ mkAnalysisOfGraph1 $ map (\(x,y) ->
     
 -- For third
 mkAnalysisOf3rdGraph :: [StatsExactSign] -> String
-mkAnalysisOf3rdGraph = undefined
-
+mkAnalysisOf3rdGraph statistic = 
+  concat [ "Average = ", show $ average, "\n\n"
+         , "Top5:\n"
+         , showTable $ snd $ top5AndLowestFullSigns stats, "\n\n"
+         , "Top5 of the lowest\n"
+         , showTable $ fst $ top5AndLowestFullSigns stats, "\n"
+         ]
+    where
+      -- Zodiac/Nothing does not tell us much
+      -- Because this category is much wider than Zodiac/Zodiac
+      stats = filter (\(_,a,_) -> a /= Nothing) statistic
+      average = averageOfFullSigns stats
+      difference st = diffFromAverageForFullSigns st average
+      differenceIn st = diffFromAverageInPercentages (difference st) average
+--      showTable :: [StatsSign] -> String
+      showTable st = concat $ map (\x@(zod, zod2, number) -> concat 
+                                    [ show zod, "/", show $ fromJust zod2
+                                    , "\t", show number, "\t" 
+                                    , printf "%10.2f" (difference x)
+                                    , "\t"
+                                    , printf "%5.2f" (differenceIn x)
+                                    , "\n"]
+                                  ) st
 -- For fourth
 mkAnalysisOf4rdGraph :: [StatsBirthday] -> String
 mkAnalysisOf4rdGraph = undefined

@@ -111,4 +111,4 @@ stringToZodiac zod = case zod of
   "Aquarius"    -> Just Aquarius
   "Pisces"      -> Just Pisces
   "Nothing"     -> Nothing
-  _             -> error "Wrong zodiac sign!"
+  _             -> error "Can't convert string to zodiac sign! (function: stringToZodiac)"

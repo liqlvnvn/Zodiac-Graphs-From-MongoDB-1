@@ -8,19 +8,23 @@ import System.FilePath          ( (</>) )
 
 main :: IO ()
 main = do
+  -- Collect data from database
   a' <- readFromMongo db (query1 collection)
   b' <- readFromMongo db (query2 collection)
   c' <- readFromMongo db (query3 collection)
   d' <- readFromMongo db (query4 collection)
+  -- Converting raw db answer to internal representation
   let a = parse1 a'
   let b = parse2 b'
   let c = parse3 c'
   let d = parse4 d'
-  writeFile ("data" </> "file1.txt") (convert1 a)
-  writeFile ("data" </> "file2.txt") (convert2 b)
-  writeFile ("data" </> "file3.txt") (convert3 c)
-  writeFile ("data" </> "file4.txt") (convert4 d)
---  putStrLn $ mkAnalysisOfGraph1 b
---  putStrLn $ mkAnalysisOf2ndGraph b
---  putStrLn $ mkAnalysisOf3rdGraph c
-  putStrLn $ mkAnalysisOfGraph1 d
+  -- Make data files for gnuplot
+  writeFile ("data" </> "data1.txt") (convert1 a)
+  writeFile ("data" </> "data2.txt") (convert2 b)
+  writeFile ("data" </> "data3.txt") (convert3 c)
+  writeFile ("data" </> "data4.txt") (convert4 d)
+  -- Analysis of graphs
+  writeFile ("data" </> "graph1.txt") (mkAnalysisOf1stGraph a)
+  writeFile ("data" </> "graph2.txt") (mkAnalysisOf2ndGraph b)
+  writeFile ("data" </> "graph3.txt") (mkAnalysisOf3rdGraph c)
+  writeFile ("data" </> "graph4.txt") (mkAnalysisOfGraph1 d)

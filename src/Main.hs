@@ -4,6 +4,8 @@ import ReadFromMongo            ( readFromMongo, db, collection,
                                   query1, query2, query3, query4 )
 import Parsing.ParsingFromMongo ( parse1, parse2, parse3, parse4 )
 import ToFile                  -- ( convert1, convert2, convert3, convert4 )
+import SimpleAnalysis
+
 import System.FilePath          ( (</>) )
 
 main :: IO ()
@@ -27,4 +29,4 @@ main = do
   writeFile ("data" </> "graph1.txt") (mkAnalysisOf1stGraph a)
   writeFile ("data" </> "graph2.txt") (mkAnalysisOf2ndGraph b)
   writeFile ("data" </> "graph3.txt") (mkAnalysisOf3rdGraph c)
-  writeFile ("data" </> "graph4.txt") (mkAnalysisOfGraph1 d)
+  writeFile ("data" </> "graph4.txt") (mkAnalysisOf4rdGraph d)

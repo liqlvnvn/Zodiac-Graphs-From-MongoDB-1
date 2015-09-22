@@ -8,23 +8,16 @@ module ToFile
   , convert2
   , convert3
   , convert4
-  , mkAnalysisOfGraph1
-  , mkAnalysisOf2ndGraph
-  , mkAnalysisOf3rdGraph
   ) where
 
 import Parsing ( Birthday(..), StatsSign, 
                  StatsInfSign, StatsExactSign, StatsBirthday,
                )
-import SimpleAnalysis
 
 import Data.Tuple.Select ( sel1, sel2, sel3 )
 import Data.Ord          ( comparing )
-import Data.List         ( sortBy, groupBy, partition )
-import Text.Printf
-import Data.Maybe        ( fromJust, fromMaybe, isJust )
+import Data.List         ( sortBy, groupBy, )
 import Data.Function     ( on )
-import Control.Arrow     ( first )
 
 -- | query1
 convert1 :: [StatsSign] -> String
@@ -95,97 +88,4 @@ sortOn f =
   map snd . sortBy (comparing fst) . map (\x -> let y = f x
                                                 in y `seq` (y, x))
 
--- Functions for writing the results of the simple analysis
--- For first and second graph
---mkAnalysisOfGraph1 :: [StatsSign] -> String
 
-mkAnalysisOfGraph stats funcForTuple funcForAvrg showTable = 
-  concat [ "Average = ", show average, "\n\n"
-         , "Top5:\n"
-         , showTable $ top, "\n\n"
-         , "Top5 of the lowest\n"
-         , showTable $ lowest, "\n"
-         ]
-  where
-    top             = snd $ topAndLowest stats funcForTuple
-    lowest          = fst $ topAndLowest stats funcForTuple
-    average         = avrgOf stats funcForAvrg
-    difference st   = diffFromAvrg st average funcForTuple
-    differenceIn st = diffFromAverageInPercentages (difference st) average
-
-mkAnalysisOf1stGraph stats =
-  mkAnalysisOfGraph stats snd (\(_,a) (b,c) -> (b+1,a+c)) showTable
-  where
-    showTable = concatMap (\x@(zodiac, number) -> concat 
-                                  [ show zodiac, "\t", show number, "\t" 
-                                  , printf "%10.2f" (difference x)
-                                  , "\t"
-                                  , printf "%5.2f" (differenceIn x)
-                                  , "\n"]
-                          )
-
-
-mkAnalysisOfGraph1 stats = 
-  concat [ "Average = ", show average, "\n\n"
-         , "Top5:\n"
-         , showTable $ top, "\n\n"
-         , "Top5 of the lowest\n"
-         , showTable $ lowest, "\n"
-         ]
-  where
-    top = snd $ topAndLowest stats snd
-    lowest = fst $ topAndLowest stats snd
-    average = avrgOf stats (\(_,a) (b,c) -> (b+1,a+c))
-    difference st = diffFromAvrg st average snd
-    differenceIn st = diffFromAverageInPercentages (difference st) average
---      showTable :: [StatsSign] -> String
-    showTable = concatMap (\x@(zodiac, number) -> concat 
-                                  [ show zodiac, "\t", show number, "\t" 
-                                  , printf "%10.2f" (difference x)
-                                  , "\t"
-                                  , printf "%5.2f" (differenceIn x)
-                                  , "\n"]
-                          )
-
--- For second
-mkAnalysisOf2ndGraph :: [StatsInfSign] -> String
-mkAnalysisOf2ndGraph stats = 
-  concat [ mkAnalysisOfGraph1 $ map (first fromJust) (fst temp)
-         , "Nothing", "\t"
-         , show $ snd (head $ snd temp)
-         , "\n"
-         ]
-  where
-    -- stats -> ([(Maybe zodiac,num)],[])
-    temp = partition (isJust . fst) stats
-    
--- For third
-mkAnalysisOf3rdGraph :: [StatsExactSign] -> String
-mkAnalysisOf3rdGraph statistic = 
-  concat [ "Average = ", show average, "\n\n"
-         , "Top5:\n"
-         , showTable $ top, "\n\n"
-         , "Top5 of the lowest\n"
-         , showTable $ lowest, "\n"
-         ]
-  where
-    -- Zodiac/Nothing does not tell us much
-    -- Because this category is much wider than Zodiac/Zodiac
-    stats = filter (isJust . sel2) statistic
-    top = snd $ topAndLowest stats sel3
-    lowest = fst $ topAndLowest stats sel3
-    average = avrgOf stats (\(_,_,a) (b,c) -> (b+1,a+c))
-    difference st = diffFromAvrg st average sel3
-    differenceIn st = diffFromAverageInPercentages (difference st) average
---    showTable :: [StatsSign] -> String
-    showTable = concatMap (\x@(zod, zod2, number) -> concat 
-                                  [ show zod, "/", show $ fromJust zod2
-                                  , "\t", show number, "\t" 
-                                  , printf "%10.2f" (difference x)
-                                  , "\t"
-                                  , printf "%5.2f" (differenceIn x)
-                                  , "\n"]
-                          )
--- For fourth
-mkAnalysisOf4rdGraph :: [StatsBirthday] -> String
-mkAnalysisOf4rdGraph = undefined

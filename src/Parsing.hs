@@ -1,6 +1,8 @@
 {-| Data types for describing actions.
 -}
 
+{-# LANGUAGE RecordWildCards #-}
+
 module Parsing
   ( Person(..)
   , Birthday(..)
@@ -29,8 +31,7 @@ data Birthday = Birthday
   } 
 
 instance Show Birthday where
-  show Birthday {day = d, month = m, year = y} = show m ++ " " 
-                                                        ++ printf "%2d" d
+  show Birthday {..} = show month ++ " " ++ printf "%2d" day
 
 instance Eq Birthday where
   (==) Birthday {day = d1, month = m1, year = y1}

@@ -1,4 +1,4 @@
-cd "../data"
+cd "data"
 set terminal png
 set key off
 set output "graph4.png"
